@@ -12,16 +12,28 @@ int main(int, char**)
 
 	// 获取整个帧数
 	long totalFrameNumber = cap.get(CV_CAP_PROP_FRAME_COUNT);
-
+	
 	//获取帧率  
 	double rate = cap.get(CV_CAP_PROP_FPS);
 
 	int delay = 1000 / rate;
 
+	// 获得视频输入size
+	Size size = Size((int)cap.get(CV_CAP_PROP_FRAME_WIDTH),    
+		(int)cap.get(CV_CAP_PROP_FRAME_HEIGHT));
+
+	VideoWriter video;
+	video.open("VideoTest.avi", CV_FOURCC('M', 'J', 'P', 'G'), rate, size, true);
+	if (!video.isOpened())
+	{
+		return -1;
+	}
+
 	for (int i = 0; i<totalFrameNumber;i++)
 	{
 		Mat frame;
 		cap >> frame;
+		video << frame;
 
 		imshow("edges", frame);
 		int c = waitKey(delay);
